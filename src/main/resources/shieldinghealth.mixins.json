@@ -1,0 +1,15 @@
+{
+    "package": "net.perpetualeve.shieldinghealth.mixin",
+    "required": true,
+    "refmap": "shieldinghealth.refmap.json",
+    "minVersion": "0.8.5",
+    "compatibilityLevel": "JAVA_17",
+    "mixins": [
+        "world.damagesource.CombatTrackerMixin"
+    ],
+    "client": [
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
