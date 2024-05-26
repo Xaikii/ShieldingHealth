@@ -1,4 +1,6 @@
 {
 	"potion.shieldinghealth.interference": "Interference",
-    "potion.shieldinghealth.interference.description": "Extends the time you need to fully restore your Shield"
+    "potion.shieldinghealth.interference.description": "Extends the time you need to fully restore your Shield",
+    "potion.shieldinghealth.tainted": "Tainted",
+    "potion.shieldinghealth.tained.description": "Reduces your max Shield"
 }
