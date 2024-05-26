@@ -9,7 +9,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class ShieldRiever extends Enchantment {
 
-	public ShieldRiever(Rarity p_44676_, EnchantmentCategory p_44677_, EquipmentSlot[] p_44678_) {
+	public ShieldRiever() {
 		super(Rarity.RARE, EnchantmentCategory.BREAKABLE, new EquipmentSlot[] {
 			EquipmentSlot.MAINHAND
 		});

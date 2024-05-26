@@ -2,5 +2,7 @@
 	"potion.shieldinghealth.interference": "Interference",
     "potion.shieldinghealth.interference.description": "Extends the time you need to fully restore your Shield",
     "potion.shieldinghealth.tainted": "Tainted",
-    "potion.shieldinghealth.tained.description": "Reduces your max Shield"
+    "potion.shieldinghealth.tained.description": "Reduces your max Shield",
+	"enchantment.shieldinghealth.shield_reaver": "Shield Reaver",
+	"enchantment.shieldinghealth.shield_reaver.desc": "Decreases your targets Shields"
 }

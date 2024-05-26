@@ -106,6 +106,8 @@ public class ShieldingHealth {
 
 		INTERFERENCE	= new InterferencePotion( );
 		TAINTED			= new TaintedPotion( );
+		
+		SHIELD_RIEVER = new ShieldRiever();
 
 		CONFIG.register( );
 
@@ -125,6 +127,9 @@ public class ShieldingHealth {
 		{
 			T.register(ResourceLocation.tryParse(MODID + ":interference"), INTERFERENCE);
 			T.register(ResourceLocation.tryParse(MODID + ":tainted"), TAINTED);
+		});
+		event.register(ForgeRegistries.Keys.ENCHANTMENTS, T -> {
+			T.register(ResourceLocation.tryParse(MODID + ":shield_reaver"), SHIELD_RIEVER);
 		});
 	}
 
