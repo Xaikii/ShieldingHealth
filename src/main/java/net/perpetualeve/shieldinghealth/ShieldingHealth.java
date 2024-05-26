@@ -57,6 +57,7 @@ public class ShieldingHealth {
 	public static Attribute	SHIELD_DELAY_ATTRIBUTE;
 
 	public static MobEffect INTERFERENCE;
+	public static MobEffect TAINTED;
 
 	public static Enchantment SHIELD_RIEVER;
 
@@ -96,10 +97,12 @@ public class ShieldingHealth {
 
 		config.add(server);
 
+		SHIELD_DELAY_ATTRIBUTE	= new ShieldDelayAttribute( );
 		SHIELD_VALUE_ATTRIBUTE	= new ShieldValueAttribute( );
 		SHIELD_REGEN_ATTRIBUTE	= new ShieldRegenAttribute( );
 
 		INTERFERENCE = new InterferencePotion( );
+		TAINTED = new TaintedPotion();
 
 		CONFIG.register( );
 
@@ -117,7 +120,8 @@ public class ShieldingHealth {
 		});
 		event.register(ForgeRegistries.Keys.MOB_EFFECTS, T ->
 		{
-			event.getForgeRegistry( ).register("interception", INTERFERENCE);
+			T.register(ResourceLocation.tryParse(MODID + ":interference"), INTERFERENCE);
+			T.register(ResourceLocation.tryParse(MODID + ":tainted"), TAINTED);
 		});
 	}
 
