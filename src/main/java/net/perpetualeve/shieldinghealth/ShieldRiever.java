@@ -4,13 +4,19 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class ShieldRiever extends Enchantment {
 
-	public ShieldRiever() {
-		super(Rarity.RARE, EnchantmentCategory.BREAKABLE, new EquipmentSlot[] {
+	public ShieldRiever( ) {
+		super(Rarity.RARE, EnchantmentCategory.create("weaponry", T ->
+		{
+			return EnchantmentCategory.BREAKABLE.canEnchant(T) || EnchantmentCategory.WEAPON.canEnchant(T)
+				|| EnchantmentCategory.TRIDENT.canEnchant(T) || EnchantmentCategory.BOW.canEnchant(T)
+				|| EnchantmentCategory.CROSSBOW.canEnchant(T);
+		}), new EquipmentSlot[] {
 			EquipmentSlot.MAINHAND
 		});
 	}
@@ -21,13 +27,18 @@ public class ShieldRiever extends Enchantment {
 	}
 
 	@Override
+	public boolean canEnchant(ItemStack p_44689_) {
+		return true;
+	}
+
+	@Override
 	public int getMaxLevel( ) {
 		return 5;
 	}
 
 	@Override
 	public boolean isAllowedOnBooks( ) {
-		return false;
+		return true;
 	}
 
 	@Override
