@@ -4,20 +4,20 @@ import carbonconfiglib.CarbonConfig;
 import carbonconfiglib.api.ConfigType;
 import carbonconfiglib.config.Config;
 import carbonconfiglib.config.ConfigEntry.BoolValue;
+import carbonconfiglib.config.ConfigEntry.DoubleValue;
 import carbonconfiglib.config.ConfigEntry.IntValue;
 import carbonconfiglib.config.ConfigHandler;
 import carbonconfiglib.config.ConfigSection;
 import carbonconfiglib.config.ConfigSettings;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.CombatTracker;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -46,14 +46,22 @@ public class ShieldingHealth {
 	public static BoolValue		SHIELD_PERCENT;
 	public static BoolValue		SHIELD_REGEN_OUT_COMBAT;
 	public static BoolValue		PLAYER_SHIELD_DEFAULT;
-	public static IntValue		SHIELD_REGEN_INTERVAL;
+	public static IntValue		SHIELD_DELAY;
 	public static IntValue		SHIELDREGEN_DEFAULT;
+	public static DoubleValue	POTION_SHIELD_EFFECT;
+	public static DoubleValue	ENCHANTMENT_STEAL;
+	public static BoolValue		ENCHANTMENT_STEAL_PERCENT;
 
 	public static Attribute	SHIELD_VALUE_ATTRIBUTE;
 	public static Attribute	SHIELD_REGEN_ATTRIBUTE;
+	public static Attribute	SHIELD_DELAY_ATTRIBUTE;
 
-	public static final String	SHIELD_TAG			= "shielded";
-	public static final String	SHIELD_STRONG_TAG	= "shieldeds";
+	public static MobEffect INTERFERENCE;
+
+	public static Enchantment SHIELD_RIEVER;
+
+	public static final String	SHIELD_TAG			= "sh_shielded";
+	public static final String	SHIELD_STRONG_TAG	= "sh_pshielded";
 
 	public ShieldingHealth( ) {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get( ).getModEventBus( );
@@ -73,17 +81,25 @@ public class ShieldingHealth {
 			"If true will only start regen the Shield when no Combat Entries are found. When false will regen after some time of not attacking or being attacked");
 		PLAYER_SHIELD_DEFAULT		= server.addBool("Player has Shield by default", true,
 			"Should the Player have said Shield by default, set false if you want to handle this externally e.g. KubeJS");
-		SHIELD_REGEN_INTERVAL		= server.addInt("Shield regen start", 100,
+		SHIELD_DELAY				= server.addInt("Shield regen start", 100,
 			"How many ticks after trigger should start the regen process. Only works when <" + SHIELD_REGEN_OUT_COMBAT.getKey( )
 				+ "> is false")
-			.setMin(0).setMax(1200);
+			.setMin(0).setMax(6000);
 		SHIELDREGEN_DEFAULT			= server.addInt("Shield regen default time", 100,
 			"How many ticks are required to fully restore the shield").setMin(20).setMax(1200);
+		POTION_SHIELD_EFFECT		= server
+			.addDouble("Shield regen time by Potion", 1.0d, "How much the Effect should extend the necessary time").setMin(0.01d)
+			.setMax(100.d);
+		ENCHANTMENT_STEAL			= server.addDouble("Enchantment Shield Steal", 4, "How much Absorption Shield should be removed?");
+		ENCHANTMENT_STEAL_PERCENT	= server.addBool("Enchantment Shield Steal Percent", false,
+			"Should the stealing be in percent instead?");
 
 		config.add(server);
 
 		SHIELD_VALUE_ATTRIBUTE	= new ShieldValueAttribute( );
 		SHIELD_REGEN_ATTRIBUTE	= new ShieldRegenAttribute( );
+
+		INTERFERENCE = new InterferencePotion( );
 
 		CONFIG.register( );
 
@@ -95,8 +111,13 @@ public class ShieldingHealth {
 	public void register(RegisterEvent event) {
 		event.register(ForgeRegistries.Keys.ATTRIBUTES, T ->
 		{
+			T.register(ResourceLocation.tryParse(MODID + ":" + ShieldDelayAttribute.ID), SHIELD_DELAY_ATTRIBUTE);
 			T.register(ResourceLocation.tryParse(MODID + ":" + ShieldValueAttribute.ID), SHIELD_VALUE_ATTRIBUTE);
 			T.register(ResourceLocation.tryParse(MODID + ":" + ShieldRegenAttribute.ID), SHIELD_REGEN_ATTRIBUTE);
+		});
+		event.register(ForgeRegistries.Keys.MOB_EFFECTS, T ->
+		{
+			event.getForgeRegistry( ).register("interception", INTERFERENCE);
 		});
 	}
 
@@ -105,6 +126,7 @@ public class ShieldingHealth {
 	})
 	public void entityAttribute(EntityAttributeModificationEvent event) {
 		for (EntityType type : event.getTypes( )) {
+			event.add(type, SHIELD_DELAY_ATTRIBUTE, SHIELD_DELAY_ATTRIBUTE.getDefaultValue( ));
 			event.add(type, SHIELD_REGEN_ATTRIBUTE, SHIELD_REGEN_ATTRIBUTE.getDefaultValue( ));
 			event.add(type, SHIELD_VALUE_ATTRIBUTE, SHIELD_VALUE_ATTRIBUTE.getDefaultValue( ));
 		}
@@ -141,8 +163,7 @@ public class ShieldingHealth {
 
 		CombatTrackerMixin	tracker	= getMixin(entity.getCombatTracker( ));
 		boolean				flag	= !tracker.isInCombat( ) && (SHIELD_REGEN_OUT_COMBAT.getValue( ) ? true
-			: ((entity.tickCount - tracker.getLastDamageTime( )) >= SHIELD_REGEN_INTERVAL
-				.getValue( )));
+			: ((entity.tickCount - tracker.getLastDamageTime( )) >= entity.getAttributeValue(SHIELD_DELAY_ATTRIBUTE)));
 		if (flag) regen(entity, percent);
 	}
 
