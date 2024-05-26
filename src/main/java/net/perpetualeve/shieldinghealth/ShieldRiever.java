@@ -42,9 +42,14 @@ public class ShieldRiever extends Enchantment {
 
 	@Override
 	public void doPostAttack(LivingEntity p_44686_, Entity p_44687_, int p_44688_) {
-		float amount = p_44686_.getAbsorptionAmount( );
-		p_44686_.setAbsorptionAmount(
-			amount - (float) (ShieldingHealth.ENCHANTMENT_STEAL_PERCENT.getValue( ) ? ShieldingHealth.ENCHANTMENT_STEAL.getValue( ) * amount * 0.01d
-				: ShieldingHealth.ENCHANTMENT_STEAL.getValue( )));
+		if (p_44687_ instanceof LivingEntity entity) {
+			float	targetShield	= entity.getAbsorptionAmount( );
+			float	amount			= (float) (ShieldingHealth.ENCHANTMENT_STEAL_PERCENT.getValue( )
+				? ShieldingHealth.ENCHANTMENT_STEAL.getValue( ) * targetShield * 0.01d
+				: ShieldingHealth.ENCHANTMENT_STEAL.getValue( ));
+			entity.setAbsorptionAmount(targetShield - amount);
+			if (ShieldingHealth.ENCHANTMENT_BENEFIT.getValue( )) p_44686_.setAbsorptionAmount(p_44686_.getAbsorptionAmount( ) + amount);
+		}
+
 	}
 }

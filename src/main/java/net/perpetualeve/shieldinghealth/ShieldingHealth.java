@@ -51,13 +51,14 @@ public class ShieldingHealth {
 	public static DoubleValue	POTION_SHIELD_EFFECT;
 	public static DoubleValue	ENCHANTMENT_STEAL;
 	public static BoolValue		ENCHANTMENT_STEAL_PERCENT;
+	public static BoolValue		ENCHANTMENT_BENEFIT;
 
 	public static Attribute	SHIELD_VALUE_ATTRIBUTE;
 	public static Attribute	SHIELD_REGEN_ATTRIBUTE;
 	public static Attribute	SHIELD_DELAY_ATTRIBUTE;
 
-	public static MobEffect INTERFERENCE;
-	public static MobEffect TAINTED;
+	public static MobEffect	INTERFERENCE;
+	public static MobEffect	TAINTED;
 
 	public static Enchantment SHIELD_RIEVER;
 
@@ -94,6 +95,8 @@ public class ShieldingHealth {
 		ENCHANTMENT_STEAL			= server.addDouble("Enchantment Shield Steal", 4, "How much Absorption Shield should be removed?");
 		ENCHANTMENT_STEAL_PERCENT	= server.addBool("Enchantment Shield Steal Percent", false,
 			"Should the stealing be in percent instead?");
+		ENCHANTMENT_BENEFIT			= server.addBool("Enchantment Shield Gain", false,
+			"Should the removed amount by added on your own Shield?");
 
 		config.add(server);
 
@@ -101,8 +104,8 @@ public class ShieldingHealth {
 		SHIELD_VALUE_ATTRIBUTE	= new ShieldValueAttribute( );
 		SHIELD_REGEN_ATTRIBUTE	= new ShieldRegenAttribute( );
 
-		INTERFERENCE = new InterferencePotion( );
-		TAINTED = new TaintedPotion();
+		INTERFERENCE	= new InterferencePotion( );
+		TAINTED			= new TaintedPotion( );
 
 		CONFIG.register( );
 
