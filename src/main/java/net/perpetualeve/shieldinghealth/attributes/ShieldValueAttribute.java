@@ -1,6 +1,7 @@
-package net.perpetualeve.shieldinghealth;
+package net.perpetualeve.shieldinghealth.attributes;
 
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
+import net.perpetualeve.shieldinghealth.ShieldingHealth;
 
 public class ShieldValueAttribute extends RangedAttribute {
 

@@ -1,9 +1,10 @@
-package net.perpetualeve.shieldinghealth;
+package net.perpetualeve.shieldinghealth.potions;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
+import net.perpetualeve.shieldinghealth.ShieldingHealth;
 
 public class InterferencePotion extends MobEffect {
 

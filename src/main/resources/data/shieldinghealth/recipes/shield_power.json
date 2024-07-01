@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#D#",
+        "#X#",
+        " # "
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:copper_block"
+        },
+        "D": {
+            "item": "minecraft:diamond"
+        },
+        "X": {
+            "item": "shieldinghealth:power_token"
+        }
+    },
+    "result": {
+        "item": "shieldinghealth:shield_power",
+        "count": 1
+    }
+}

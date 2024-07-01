@@ -1,12 +1,12 @@
-package net.perpetualeve.shieldinghealth;
+package net.perpetualeve.shieldinghealth.enchantments;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.perpetualeve.shieldinghealth.ShieldingHealth;
 
 public class ShieldRiever extends Enchantment {
 
@@ -24,11 +24,6 @@ public class ShieldRiever extends Enchantment {
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack) {
 		return false;
-	}
-
-	@Override
-	public boolean canEnchant(ItemStack p_44689_) {
-		return true;
 	}
 
 	@Override

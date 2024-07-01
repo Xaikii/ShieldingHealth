@@ -1,8 +1,16 @@
 {
-	"potion.shieldinghealth.interference": "Interference",
-    "potion.shieldinghealth.interference.description": "Extends the time you need to fully restore your Shield",
-    "potion.shieldinghealth.tainted": "Tainted",
-    "potion.shieldinghealth.tained.description": "Reduces your max Shield",
+	"effect.shieldinghealth.interference": "Interference",
+    "effect.shieldinghealth.interference.description": "Extends the time you need to fully restore your Shield",
+    "effect.shieldinghealth.tainted": "Tainted",
+    "effect.shieldinghealth.tained.description": "Reduces your max Shield",
 	"enchantment.shieldinghealth.shield_reaver": "Shield Reaver",
-	"enchantment.shieldinghealth.shield_reaver.desc": "Decreases your targets Shields"
+	"enchantment.shieldinghealth.shield_reaver.desc": "Decreases your targets Shields",
+	"enchantment.shieldinghealth.bastion_of_flesh": "Bastion of Flesh",
+	"enchantment.shieldinghealth.bastion_of_flesh.desc": "Reduces Armor and Toughness to increase total Shield Capacity",
+	"enchantment.shieldinghealth.shielding": "Shielding",
+	"enchantment.shieldinghealth.shielding.desc": "Increases Shield Capacity flat",
+	"item.shieldinghealth.power_token": "Power Token",
+	"item.shieldinghealth.power_token_info": "Obtainable by killing Entity Type for the first time and rarely as Loot",
+	"item.shieldinghealth.shield_power": "Shield Power",
+	"item.shieldinghealth.shield_power_message": "Reached %d/%d extra Shield"
 }

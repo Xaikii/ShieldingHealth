@@ -4,6 +4,7 @@ plugins {
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '6.0.+'
     id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
+	id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
 version = mod_version
@@ -83,11 +84,15 @@ repositories {
     maven {	
         url = "https://jitpack.io"
 	}
+    maven { 
+    	url = 'https://maven.parchmentmc.org' 
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     implementation fg.deobf("curse.maven:carbon-config-898104:5290831")
+    implementation fg.deobf("curse.maven:jei-238222:5440261")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 

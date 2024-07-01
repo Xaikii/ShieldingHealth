@@ -5,11 +5,12 @@
     "minVersion": "0.8.5",
     "compatibilityLevel": "JAVA_17",
     "mixins": [
-        "world.damagesource.CombatTrackerMixin"
+        "world.damagesource.CombatTrackerMixin",
+        "world.damagesource.ICombatTrackerMixin"
     ],
     "client": [
     ],
     "injectors": {
-        "defaultRequire": 1
+        "defaultRequire": 0
     }
 }
