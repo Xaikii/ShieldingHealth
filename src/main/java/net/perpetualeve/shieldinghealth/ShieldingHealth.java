@@ -20,6 +20,7 @@ import carbonconfiglib.config.ConfigEntry.IntValue;
 import carbonconfiglib.config.ConfigHandler;
 import carbonconfiglib.config.ConfigSection;
 import carbonconfiglib.config.ConfigSettings;
+import carbonconfiglib.impl.ReloadMode;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.CombatTracker;
 import net.minecraft.world.effect.MobEffect;
@@ -82,12 +83,6 @@ public class ShieldingHealth {
 	public static final String	MODID	= "shieldinghealth";
 	private static final Logger	LOGGER	= LogUtils.getLogger( );
 
-//	public static final DeferredRegister<Item> ITEM_REG = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
-//	public static final RegistryObject<Item> POWER_TOKEN = ITEM_REG.register("power_token",
-//		() -> new PowerToken());
-//	public static final RegistryObject<Item> SHIELD_POWER = ITEM_REG.register("shield_power",
-//		() -> new ShieldPower());
-
 	public static ConfigHandler	CONFIG;
 	public static IntValue		SHIELD_VALUE;
 	public static IntValue		SHIELD_VALUE_PER_ABSORPTION;
@@ -97,6 +92,7 @@ public class ShieldingHealth {
 	public static IntValue		SHIELD_DELAY;
 	public static IntValue		SHIELDREGEN_DEFAULT;
 	public static DoubleValue	POTION_SHIELD_EFFECT;
+	public static DoubleValue	POTION_AMOUNT_EFFECT;
 	public static DoubleValue	ENCHANTMENT_STEAL;
 	public static BoolValue		ENCHANTMENT_STEAL_PERCENT;
 	public static BoolValue		ENCHANTMENT_BENEFIT;
@@ -130,7 +126,7 @@ public class ShieldingHealth {
 		CONFIG						= CarbonConfig.CONFIGS.createConfig(config,
 			ConfigSettings.withConfigType(ConfigType.SERVER));
 		SHIELD_VALUE				= server.addInt("Shield Value", 8, "How many Health Points the Shield should be by default").setMin(0)
-			.setMax(65520);
+			.setMax(65520).setRequiredReload(ReloadMode.GAME);
 		SHIELD_VALUE_PER_ABSORPTION	= server.addInt("Shield Value Per Absorption", 4, "Bonus Health per Absorption Level").setMin(0)
 			.setMax(65520);
 		SHIELD_PERCENT				= server.addBool("Shield Percent", false,
@@ -142,11 +138,15 @@ public class ShieldingHealth {
 		SHIELD_DELAY				= server.addInt("Shield regen start", 100,
 			"How many ticks after trigger should start the regen process. Only works when <" + SHIELD_REGEN_OUT_COMBAT.getKey( )
 				+ "> is false")
-			.setMin(0).setMax(6000);
+			.setMin(0).setMax(6000).setRequiredReload(ReloadMode.GAME);
 		SHIELDREGEN_DEFAULT			= server.addInt("Shield regen default time", 100,
-			"How many ticks are required to fully restore the shield").setMin(20).setMax(1200);
+			"How many ticks are required to fully restore the shield").setMin(20).setMax(1200).setRequiredReload(ReloadMode.GAME);
 		POTION_SHIELD_EFFECT		= server
-			.addDouble("Shield regen time by Potion", 1.0d, "How much the Effect should extend the necessary time").setMin(0.01d)
+			.addDouble("Shield regen time by Potion", 1.0d, "How much the Interference Potion Effect should extend the necessary time")
+			.setMin(0.01d)
+			.setMax(100.d);
+		POTION_AMOUNT_EFFECT		= server
+			.addDouble("Shield amount by Potion", 1.0d, "How much the Tainted Potion Effect should reduce of the shield").setMin(0.01d)
 			.setMax(100.d);
 		ENCHANTMENT_STEAL			= server.addDouble("Enchantment Shield Steal", 4, "How much Absorption Shield should be removed?");
 		ENCHANTMENT_STEAL_PERCENT	= server.addBool("Enchantment Shield Steal Percent", false,
@@ -161,6 +161,8 @@ public class ShieldingHealth {
 
 		config.add(server);
 
+		CONFIG.register( );
+
 		SHIELD_DELAY_ATTRIBUTE	= new ShieldDelayAttribute( );
 		SHIELD_VALUE_ATTRIBUTE	= new ShieldValueAttribute( );
 		SHIELD_REGEN_ATTRIBUTE	= new ShieldRegenAttribute( );
@@ -172,12 +174,11 @@ public class ShieldingHealth {
 		BASTION_OF_FLESH	= new BastionOfFlesh( );
 		SHIELDING			= new Shielding( );
 
-		CONFIG.register( );
-
 		MinecraftForge.EVENT_BUS.register(this);
 		modEventBus.addListener(this::entityAttribute);
 		modEventBus.addListener(this::register);
 		modEventBus.addListener(this::creativeTabBuild);
+
 	}
 
 	public void register(RegisterEvent event) {
@@ -347,7 +348,7 @@ public class ShieldingHealth {
 		return (float) (entity.getAttributeValue(ShieldingHealth.SHIELD_VALUE_ATTRIBUTE)
 			+ (entity.hasEffect(MobEffects.ABSORPTION) ? entity.getEffect(MobEffects.ABSORPTION).getAmplifier( ) + 1 : 0)
 				* ShieldingHealth.SHIELD_VALUE_PER_ABSORPTION.getValue( ))
-			* (flag ? entity.getMaxHealth( ) : 1);
+			* (flag ? entity.getMaxHealth( ) * 0.01f : 1);
 	}
 
 	public void regen(LivingEntity entity, boolean percent) {

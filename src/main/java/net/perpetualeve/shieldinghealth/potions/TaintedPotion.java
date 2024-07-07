@@ -19,6 +19,6 @@ public class TaintedPotion extends MobEffect {
 	}
 
 	public float calculate(int level, double scalar) {
-		return (float) ((level + 1) * ShieldingHealth.POTION_SHIELD_EFFECT.get( ) * scalar);
+		return (float) ((level + 1) * ShieldingHealth.POTION_AMOUNT_EFFECT.get( ) * scalar);
 	}
 }
